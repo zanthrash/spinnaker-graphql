@@ -32,7 +32,7 @@ const getServerGroups = (appName) => {
 			})
 }
 
-const applicationAttributesType = new GraphQLObjectType({
+const AppAttributes = new GraphQLObjectType({
 	name: "AppAttributes",
 	fields: {
 		description: {
@@ -59,7 +59,7 @@ const clusterType = new GraphQLObjectType({
 	}
 });
 
-const clustersType = new GraphQLObjectType({
+const Clusters = new GraphQLObjectType({
 	name: "AppClusters",
 	fields: {
 		prod: {
@@ -71,7 +71,7 @@ const clustersType = new GraphQLObjectType({
 	}
 });
 
-const serverGroupType = new GraphQLObjectType({
+const ServerGroup = new GraphQLObjectType({
 	name: 'ServerGroups',
 	fields: {
 		name: { type: GraphQLString },
@@ -81,7 +81,7 @@ const serverGroupType = new GraphQLObjectType({
 	}
 });
 
-const applicationType = new GraphQLObjectType({
+const Application = new GraphQLObjectType({
 	name: 'Application',
 	fields: {
 		name: {
@@ -89,13 +89,13 @@ const applicationType = new GraphQLObjectType({
 			description: 'The name of the application'
 		},
 		attributes: {
-			type: applicationAttributesType
+			type: AppAttributes
 		},
 		clusters: {
-			type: clustersType
+			type: Clusters
 		},
 		serverGroups: {
-			type: new GraphQLList(serverGroupType),
+			type: new GraphQLList(ServerGroup),
 			args:{
 				app: {
 					type: GraphQLString
@@ -106,11 +106,11 @@ const applicationType = new GraphQLObjectType({
 	}
 });
 
-const spinType = new GraphQLObjectType({
-	name: "SpinAPI",
+const SpinnakerAPI = new GraphQLObjectType({
+	name: "SpinnakerAPI",
 	fields: {
 		application: {
-			type: applicationType,
+			type: Application,
 			args: {
 				name: {
 					type: GraphQLString
@@ -121,32 +121,18 @@ const spinType = new GraphQLObjectType({
 	}
 });
 
-const blaType = new GraphQLObjectType({
-	name: 'blah',
-	fields: {
-		street: {
-			type: GraphQLString,
-		},
-		boom: {
-			type: GraphQLString,
-			resolve() {
-				return "bang bang boom"
-			}
-		}
-	}
-});
 
-const queryType = new GraphQLObjectType({
-	name: 'SpinnakerAPI',
+const SpinnakerQuery = new GraphQLObjectType({
+	name: 'SpinnakerQuery',
 	fields: {
 		spin: {
-			type: spinType,
+			type: SpinnakerAPI ,
 			resolve(){
 				return {}
 			}
 		},
 		application: {
-			type: applicationType,
+			type: Application,
 			args: {
 				name: {
 					type: GraphQLString
@@ -158,7 +144,7 @@ const queryType = new GraphQLObjectType({
 });
 
 let schema = new GraphQLSchema({
-	 query: queryType
+	 query: SpinnakerQuery
 });
 
 console.log("GraphQL server is up");
